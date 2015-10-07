@@ -51,6 +51,9 @@ extern "C" {
 #define LOGGING_OFF     7    
 #define LOGGING_ON      8
     
+#define ARROW_YES       1
+#define ARROW_NO        0
+    
     
 /* Icon bits */
 /*extern const unsigned char odd_dots[2][25]; */
@@ -80,6 +83,8 @@ extern const unsigned char *top_menu_prog_str[8];
 extern const unsigned char *top_menu_clr_str[6];
 extern const unsigned char *top_menu_info_str[5];
 extern const unsigned char *prog_config_str[14];
+extern const unsigned char *prog_calibrate_str[10];
+extern const unsigned char *prog_exit_str[5];
 
 /* Display character patterns */
 
@@ -103,7 +108,8 @@ void EPD_PowerOff(void);
 void CopyNewImage(void);
 void ShiftScanData(void);
 void SetDisplayLine(unsigned char line);
-void SetUpDisplayRow(char row_number, char menu_level); //, unsigned char *digit_ptr);
+//void SetUpDisplayRow(char row_number, char menu_level); //, unsigned char *digit_ptr);
+void SetUpDisplayString(char ARROW, unsigned char *display_string[], char string_length);
 void SetUpIconRow(void);
 void ClearDisplay(char row);
 

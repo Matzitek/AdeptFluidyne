@@ -157,17 +157,18 @@ void main(void) {
     date_time[2] = 0x0000;  // week day/hours
     date_time[3] = 0x0000;  // minutes/seconds
     RTCC_Set();
-    ClearDisplay(0);
+    //ClearDisplay(0);
     ClearDisplay(0);
     SetUpIconRow();
     EPD_Init();
-    SetUpDisplayRow(2, disp_menu_level);
+    EPD_Update(ROW1_START, ROW1_END);
+    SetUpDisplayString(ARROW_YES, top_menu_run_str, 4);
     EPD_Update(ROW2_START, ROW2_END);
-    SetUpDisplayRow(3, disp_menu_level);
+    SetUpDisplayString(ARROW_NO, top_menu_prog_str, 8);
     EPD_Update(ROW3_START, ROW3_END);
-    SetUpDisplayRow(4, disp_menu_level);
+    SetUpDisplayString(ARROW_NO, top_menu_clr_str, 6);
     EPD_Update(ROW4_START, ROW4_END);
-    SetUpDisplayRow(5, disp_menu_level);
+    SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
     EPD_Update(ROW5_START, ROW5_END);
     EPD_PowerOff();
   
@@ -191,6 +192,7 @@ void main(void) {
             
             if(ENTER_BUTTON_PRESSED){
                 /* Move to the first sub-level */
+                ENTER_BUTTON_PRESSED = 0;
                 
                 switch(menu_row_pointer){
                     
@@ -214,6 +216,17 @@ void main(void) {
                         TopMenuItemInfo();
                         break;    
                 }
+                
+                EPD_Init();
+                SetUpDisplayString(ARROW_YES, top_menu_run_str, 4);
+                EPD_Update(ROW2_START, ROW2_END);
+                SetUpDisplayString(ARROW_NO, top_menu_prog_str, 8);
+                EPD_Update(ROW3_START, ROW3_END);
+                SetUpDisplayString(ARROW_NO, top_menu_clr_str, 6);
+                EPD_Update(ROW4_START, ROW4_END);
+                SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
+                EPD_Update(ROW5_START, ROW5_END);
+                EPD_PowerOff();
             }else{
                     
                 if(UP_BUTTON_PRESSED){
@@ -239,14 +252,53 @@ void main(void) {
                 if(UPDATE_TOP_LEVEL_MENU){
                     UPDATE_TOP_LEVEL_MENU = 0;
                     EPD_Init();
-                    SetUpDisplayRow(2, disp_menu_level);
-                    EPD_Update(ROW2_START, ROW2_END);
-                    SetUpDisplayRow(3, disp_menu_level);
-                    EPD_Update(ROW3_START, ROW3_END);
-                    SetUpDisplayRow(4, disp_menu_level);
-                    EPD_Update(ROW4_START, ROW4_END);
-                    SetUpDisplayRow(5, disp_menu_level);
-                    EPD_Update(ROW5_START, ROW5_END);
+                    
+                    switch(menu_row_pointer){
+                        case RUN_OPT:
+                            SetUpDisplayString(ARROW_YES, top_menu_run_str, 4);
+                            EPD_Update(ROW2_START, ROW2_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_prog_str, 8);
+                            EPD_Update(ROW3_START, ROW3_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_clr_str, 6);
+                            EPD_Update(ROW4_START, ROW4_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
+                            EPD_Update(ROW5_START, ROW5_END);
+                            break;
+                            
+                        case PROG_OPT:
+                            SetUpDisplayString(ARROW_NO, top_menu_run_str, 4);
+                            EPD_Update(ROW2_START, ROW2_END);
+                            SetUpDisplayString(ARROW_YES, top_menu_prog_str, 8);
+                            EPD_Update(ROW3_START, ROW3_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_clr_str, 6);
+                            EPD_Update(ROW4_START, ROW4_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
+                            EPD_Update(ROW5_START, ROW5_END);
+                            break;
+                            
+                        case CLR_OPT:
+                            SetUpDisplayString(ARROW_NO, top_menu_run_str, 4);
+                            EPD_Update(ROW2_START, ROW2_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_prog_str, 8);
+                            EPD_Update(ROW3_START, ROW3_END);
+                            SetUpDisplayString(ARROW_YES, top_menu_clr_str, 6);
+                            EPD_Update(ROW4_START, ROW4_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
+                            EPD_Update(ROW5_START, ROW5_END);
+                            break;  
+                            
+                        case INFO_OPT:
+                            SetUpDisplayString(ARROW_NO, top_menu_run_str, 4);
+                            EPD_Update(ROW2_START, ROW2_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_prog_str, 8);
+                            EPD_Update(ROW3_START, ROW3_END);
+                            SetUpDisplayString(ARROW_NO, top_menu_clr_str, 6);
+                            EPD_Update(ROW4_START, ROW4_END);
+                            SetUpDisplayString(ARROW_YES, top_menu_info_str, 5);
+                            EPD_Update(ROW5_START, ROW5_END);
+                            break;    
+                    }
+                   
                     EPD_PowerOff();
                 }
             }

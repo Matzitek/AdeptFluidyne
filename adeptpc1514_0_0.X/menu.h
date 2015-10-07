@@ -50,7 +50,12 @@ extern "C" {
 #define RUN_OPT         1
 #define PROG_OPT        2
 #define CLR_OPT         3
-#define INFO_OPT        4      
+#define INFO_OPT        4    
+    
+extern char UP_BUTTON_PRESSED;
+extern char SHIFT_BUTTON_PRESSED;
+extern char ENTER_BUTTON_PRESSED;
+extern char BUTTON_PRESS_OK;
     
 /* Variable definitions */
 extern char top_menu_item;

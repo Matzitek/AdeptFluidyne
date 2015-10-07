@@ -141,6 +141,13 @@ const unsigned char char_a[14][3] = {{0xAA, 0xAA, 0xAA},
 {0xFA, 0xAA, 0xFA}, {0xFE, 0xAB, 0xFA}, {0xBF, 0xFF, 0xFA},
 {0xAB, 0xFE, 0xFA}};
 
+const unsigned char char_b[14][3] = {{0xFA, 0xAA, 0xAA},
+{0xFA, 0xAA, 0xAA}, {0xFA, 0xAA, 0xAA}, {0xFA, 0xAA, 0xAA},
+{0xFA, 0xFE, 0xAA}, {0xFF, 0xFF, 0xAA}, {0xFF, 0xAB, 0xEA},
+{0xFA, 0xAB, 0xEA}, {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA},
+{0xFA, 0xAB, 0xEA}, {0xFF, 0xAB, 0xEA}, {0xFF, 0xFF, 0xAA},
+{0xFA, 0xFE, 0xAA}};
+
 const unsigned char char_C[14][3] = {{0xAB, 0xFE, 0xAA},
 {0xAF, 0xFF, 0xAA}, {0xBF, 0xAF, 0xEA}, {0xBE, 0xAA, 0xFA},
 {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xAA}, {0xFA, 0xAA, 0xAA},
@@ -197,6 +204,13 @@ const unsigned char char_m[14][3] = {{0xAA, 0xAA, 0xAA},
 {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA},
 {0xFA, 0xAA, 0xFA}};
 
+const unsigned char char_n[14][3] = {{0xAA, 0xAA, 0xAA},
+{0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA},
+{0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xFB, 0xFE, 0xAA},
+{0xFF, 0xFF, 0xEA}, {0xFE, 0xAB, 0xEA}, {0xFA, 0xAA, 0xFA},
+{0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA},
+{0xFA, 0xAA, 0xFA}};
+
 const unsigned char char_o[17][3] = {{0xAA, 0xAA, 0xAA},
 {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA},
 {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xAB, 0xFE, 0xAA},
@@ -240,12 +254,14 @@ const unsigned char char_u[14][3] = {{0xAA, 0xAA, 0xAA},
 {0xFA, 0xAA, 0xFA}, {0xBE, 0xAB, 0xEA}, {0xBF, 0xFF, 0xEA},
 {0xAB, 0xFE, 0xAA}};
 
-const unsigned char char_n[14][3] = {{0xAA, 0xAA, 0xAA},
+const unsigned char char_x[14][3] = {{0xAA, 0xAA, 0xAA},
 {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA},
-{0xAA, 0xAA, 0xAA}, {0xAA, 0xAA, 0xAA}, {0xFB, 0xFE, 0xAA},
-{0xFF, 0xFF, 0xEA}, {0xFE, 0xAB, 0xEA}, {0xFA, 0xAA, 0xFA},
-{0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA}, {0xFA, 0xAA, 0xFA},
-{0xFA, 0xAA, 0xFA}};
+{0xBE, 0xAB, 0xEA}, {0xBE, 0xAB, 0xEA}, {0xAF, 0xAF, 0xAA},
+{0xAF, 0xAF, 0xAA}, {0xAA, 0xFA, 0xAA}, {0xAA, 0xFA, 0xAA},
+{0xAF, 0xAF, 0xAA}, {0xAF, 0xAF, 0xAA}, {0xBE, 0xAB, 0xEA},
+{0xBE, 0xAB, 0xEA}};
+
+
 
 const unsigned char icon_bat_full[14][3] = {{0xAB, 0xFE, 0xAA},
 {0xAB, 0xFE, 0xAA}, {0xFF, 0xFF, 0xFA}, {0xFF, 0xFF, 0xFA},
@@ -324,6 +340,10 @@ const unsigned char *top_menu_prog_str[8] = {char_space, char_P, char_r, char_o,
 char_g, char_r, char_a, char_m};
 const unsigned char *prog_config_str[14] = {char_space, char_C, char_o, char_n,
 char_f, char_i, char_g, char_u, char_r, char_a, char_t, char_i, char_o, char_n};
+const unsigned char *prog_calibrate_str[10] = {char_space, char_C, char_a, char_l,
+char_i, char_b, char_r, char_a, char_t, char_e};
+const unsigned char *prog_exit_str[5] = {char_space, char_e, char_x,
+char_i, char_t};
 
 const unsigned char *top_menu_clr_str[6] = {char_space, char_C, char_l, char_e, char_a, char_r};
 
@@ -753,390 +773,54 @@ void EPD_Init(void){
     }
 }
 
-/* Set up the characters to display in a row. The display_mode argument
- * depends on the menu state. */
-void SetUpDisplayRow(char row_number, char menu_level){ //, unsigned char *digit_ptr){
+/* alternative improved row setup*/
+
+void SetUpDisplayString(char ARROW, unsigned char *display_string[], char string_length){
     
-    char i, j, k, y, x; //, *icon_ptr;
+    char a, b, i, j, k, x, y;
     
-    switch(menu_level){
-        case TOP_LEVEL:    
-            switch(row_number){
-                case 2:
-                    // 2nd row                        
-                    j = 0;
+    
+    j = 0;
 
-                    for(y = 0; y <= 13; y++){
-                        k = 0;
+    for(y = 0; y <= 13; y++){
+        k = 0;
+        
+        /* First check to see if a menu item select arrow is required */
+        for(x = 0; x < 3; x++){
+            if(ARROW == ARROW_YES){
+                display_row[y][x] = *(char_rarrow[0] + j + k);
+            }
+            else{
+                display_row[y][x] = *(display_string[0] + j + k);
+            }
 
-                        for(x = 0; x < 3; x++){
-                            if(menu_row_pointer == RUN_OPT){
-                                display_row[y][x] = *(char_rarrow[0] + j + k);
-                            }
-                            else{
-                                display_row[y][x] = *(top_menu_run_str[0] + j + k);
-                            }
+            k++;
+        }
 
-                            k++;
-                        }
+        /* Now do the rest */
+        a = 3;
+        b = 6;
+        i = 1;
+        k = 0;
 
-                        k = 0;
-
-                        for(x = 3; x < 6; x++){
-                            display_row[y][x] = *(top_menu_run_str[1] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 6; x < 9; x++){
-                            display_row[y][x] = *(top_menu_run_str[2] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 9; x < 12; x++){
-                            display_row[y][x] = *(top_menu_run_str[3] + j + k);
-                            k++;
-                        }
-
-                        j += 3;
-
-                        for(x = 12; x <= 49; x++){
-                            display_row[y][x] = WHITE;
-                        }
-                    }
-                    break;
-
-                case 3:
-                    // 3rd row                        
-                    j = 0;
-
-                    for(y = 0; y <= 13; y++){
-                        k = 0;
-
-                        for(x = 0; x < 3; x++){
-                            if(menu_row_pointer == PROG_OPT){
-                                display_row[y][x] = *(char_rarrow[0] + j + k);
-                            }
-                            else{
-                                display_row[y][x] = *(top_menu_prog_str[0] + j + k);
-                            }    
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 3; x < 6; x++){
-                            display_row[y][x] = *(top_menu_prog_str[1] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 6; x < 9; x++){
-                            display_row[y][x] = *(top_menu_prog_str[2] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 9; x < 12; x++){
-                            display_row[y][x] = *(top_menu_prog_str[3] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 12; x < 15; x++){
-                            display_row[y][x] = *(top_menu_prog_str[4] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 15; x < 18; x++){
-                            display_row[y][x] = *(top_menu_prog_str[5] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 18; x < 21; x++){
-                            display_row[y][x] = *(top_menu_prog_str[6] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 21; x < 24; x++){
-                            display_row[y][x] = *(top_menu_prog_str[7] + j + k);
-                            k++;
-                        }
-
-                        j += 3;
-
-                        for(x = 24; x <= 49; x++){
-                            display_row[y][x] = WHITE;
-                        }
-                    }
-                    break;    
-
-                case 4:
-                    // 4th row                        
-                    j = 0;
-
-                    for(y = 0; y <= 13; y++){
-                        k = 0;
-
-                        for(x = 0; x < 3; x++){
-                            if(menu_row_pointer == CLR_OPT){
-                                display_row[y][x] = *(char_rarrow[0] + j + k);
-                            }
-                            else{
-                                display_row[y][x] = *(top_menu_clr_str[0] + j + k);
-                            } 
-                            
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 3; x < 6; x++){
-                            display_row[y][x] = *(top_menu_clr_str[1] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 6; x < 9; x++){
-                            display_row[y][x] = *(top_menu_clr_str[2] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 9; x < 12; x++){
-                            display_row[y][x] = *(top_menu_clr_str[3] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 12; x < 15; x++){
-                            display_row[y][x] = *(top_menu_clr_str[4] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 15; x < 18; x++){
-                            display_row[y][x] = *(top_menu_clr_str[5] + j + k);
-                            k++;
-                        }
-
-                        j += 3;
-
-                        for(x = 18; x <= 49; x++){
-                            display_row[y][x] = WHITE;
-                        }
-                    }
-                    break;  
-
-                case 5:
-                    // 5th row                        
-                    j = 0;
-
-                    for(y = 0; y <= 13; y++){
-                        k = 0;
-
-                        for(x = 0; x < 3; x++){
-                            if(menu_row_pointer == INFO_OPT){
-                                display_row[y][x] = *(char_rarrow[0] + j + k);
-                            }
-                            else{
-                                display_row[y][x] = *(top_menu_info_str[0] + j + k);
-                            } 
-                            
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 3; x < 6; x++){
-                            display_row[y][x] = *(top_menu_info_str[1] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 6; x < 9; x++){
-                            display_row[y][x] = *(top_menu_info_str[2] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 9; x < 12; x++){
-                            display_row[y][x] = *(top_menu_info_str[3] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 12; x < 15; x++){
-                            display_row[y][x] = *(top_menu_info_str[4] + j + k);
-                            k++;
-                        }
-
-                        j += 3;
-
-                        for(x = 15; x <= 49; x++){
-                            display_row[y][x] = WHITE;
-                        }
-                    }
-                    break;    
+        while(i < string_length){
+            for(x = a; x < b; x++){
+                display_row[y][x] = *(display_string[i] + j + k);
+                k++;
             }
             
-            break;  // end of TOP_LEVEL case
-    
-        case SUB_LEVEL1:
-            /* These strings are all displayed on the 3rd row.
-             * menu_row_pointer determines what is displayed */
-            switch(menu_row_pointer){
-                case RUN_OPT:
-                    break;
-                    
-                case PROG_OPT:
-                    j = 0;
+            k = 0;
+            a = b;
+            b = a + 3;
+            i++;
+        }
 
-                    for(y = 0; y <= 13; y++){
-                        k = 0;
+        j += 3;
 
-                        for(x = 0; x < 3; x++){
-                            display_row[y][x] = *(prog_config_str[0] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 3; x < 6; x++){
-                            display_row[y][x] = *(prog_config_str[1] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 6; x < 9; x++){
-                            display_row[y][x] = *(prog_config_str[2] + j + k);
-                            k++;
-                        }
-
-                        k = 0;
-
-                        for(x = 9; x < 12; x++){
-                            display_row[y][x] = *(prog_config_str[3] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 12; x < 15; x++){
-                            display_row[y][x] = *(prog_config_str[4] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 15; x < 18; x++){
-                            display_row[y][x] = *(prog_config_str[5] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 18; x < 21; x++){
-                            display_row[y][x] = *(prog_config_str[6] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 21; x < 24; x++){
-                            display_row[y][x] = *(prog_config_str[7] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 24; x < 27; x++){
-                            display_row[y][x] = *(prog_config_str[8] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 27; x < 30; x++){
-                            display_row[y][x] = *(prog_config_str[9] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 30; x < 33; x++){
-                            display_row[y][x] = *(prog_config_str[10] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 33; x < 36; x++){
-                            display_row[y][x] = *(prog_config_str[11] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 36; x < 39; x++){
-                            display_row[y][x] = *(prog_config_str[12] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 39; x < 42; x++){
-                            display_row[y][x] = *(prog_config_str[13] + j + k);
-                            k++;
-                        }
-                        
-                        k = 0;
-
-                        for(x = 42; x < 45; x++){
-                            display_row[y][x] = *(prog_config_str[14] + j + k);
-                            k++;
-                        }
-
-                        j += 3;
-
-                        for(x = 45; x <= 49; x++){
-                            display_row[y][x] = WHITE;
-                        }
-                    }
-                    
-                    break;
-                    
-                case CLR_OPT:
-                    break;   
-                    
-                case INFO_OPT:
-                    break;    
-                
-            }
-            
-            break;
+        for(x = a; x <= 49; x++){
+            display_row[y][x] = WHITE;
+        }
     }
-    
 }
 
 

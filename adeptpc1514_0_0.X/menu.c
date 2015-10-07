@@ -40,20 +40,79 @@ void TopMenuItemRun(void){
 
 void TopMenuItemProgram(void){
     
-    /* Clear all rows except icon row */
-    ClearDisplay(0);
-    //ClearDisplay(3);
-    //ClearDisplay(4);
-    //ClearDisplay(5);
-    SetUpIconRow();
+    char menu_item, EXIT_FLAG;
     
-    /* Display "Configuration" in 3rd row */
+    menu_item = 1;
+    EXIT_FLAG = 0;
+    
+    /* Clear all rows and update icon row */
+    ClearDisplay(0);
+    SetUpIconRow();
     EPD_Init();
     EPD_Update(ROW1_START, ROW1_END);
-    SetUpDisplayRow(3, disp_menu_level);
-    EPD_Update(ROW3_START, ROW3_END);
     EPD_PowerOff();
-    disp_menu_level = TOP_LEVEL;
+    
+    while(!EXIT_FLAG){
+        
+        switch(menu_item){
+            case 1:
+                /* Display "Configuration" in 3rd row */
+                EPD_Init();
+                SetUpDisplayString(ARROW_NO, prog_config_str, 14);
+                EPD_Update(ROW3_START, ROW3_END);
+                EPD_PowerOff();
+                break;
+              
+            case 2:    
+                /* Display "Calibration" in 3rd row */
+                EPD_Init();
+                SetUpDisplayString(ARROW_NO, prog_calibrate_str, 10);
+                EPD_Update(ROW3_START, ROW3_END);
+                EPD_PowerOff();
+                break;
+                
+            case 3:    
+                /* Display "Exit" in 3rd row */
+                EPD_Init();
+                SetUpDisplayString(ARROW_NO, prog_exit_str, 5);
+                EPD_Update(ROW3_START, ROW3_END);
+                EPD_PowerOff();
+                break;    
+        }
+        
+        /* Wait for key press */
+        while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+        
+        BUTTON_PRESS_OK = 0;
+        
+        if(UP_BUTTON_PRESSED){
+            UP_BUTTON_PRESSED = 0;
+            menu_item--;
+            
+            if(menu_item < 1){
+                menu_item = 1;
+            }            
+        }
+        
+        if(SHIFT_BUTTON_PRESSED){
+            SHIFT_BUTTON_PRESSED = 0;
+            menu_item++;
+            
+            if(menu_item > 3){
+                menu_item = 1;
+            }            
+        }
+        
+        if(ENTER_BUTTON_PRESSED){
+            ENTER_BUTTON_PRESSED = 0;
+            
+            if(menu_item == 3){
+                EXIT_FLAG = 1;
+            }
+        }
+    }
+    
+    
     
 }
 
