@@ -52,12 +52,13 @@ extern "C" {
 #define CLR_OPT         3
 #define INFO_OPT        4    
     
+/* Flag declarations */    
 extern char UP_BUTTON_PRESSED;
 extern char SHIFT_BUTTON_PRESSED;
 extern char ENTER_BUTTON_PRESSED;
 extern char BUTTON_PRESS_OK;
     
-/* Variable definitions */
+/* Variable declarations */
 extern char top_menu_item;
 extern char prog_menu_item;
 
@@ -66,6 +67,10 @@ void TopMenuItemRun(void);
 void TopMenuItemProgram(void);
 void TopMenuItemClear(void);
 void TopMenuItemInfo(void);
+void PasswordEnter(void);
+void CalibrateMain(void);
+void CalibrateFactor(void);
+void CalibrateZero(void);
 
 #ifdef	__cplusplus
 }

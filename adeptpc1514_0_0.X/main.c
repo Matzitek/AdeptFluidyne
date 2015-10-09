@@ -90,7 +90,7 @@ char n_samples;
 int data, t2_pr_value, i, j; //, k;
 char k, f_excite_index;
 int pga_gain;
-long addr;
+//long addr;
 
 // ADC conversion results
 volatile unsigned int flow_raw;
@@ -143,7 +143,7 @@ void main(void) {
     icon_row_list[1] = GSM_NO_SIGNAL;
     icon_row_list[2] = LOGGING_OFF;
     menu_row_pointer = RUN_OPT;
-    disp_menu_level = TOP_LEVEL;
+    //disp_menu_level = TOP_LEVEL;
     IFS3bits.RTCIF = 0;
     SHIFT_BUTTON_PRESSED = 0;
     UP_BUTTON_PRESSED = 0; 
@@ -158,9 +158,11 @@ void main(void) {
     date_time[3] = 0x0000;  // minutes/seconds
     RTCC_Set();
     //ClearDisplay(0);
-    ClearDisplay(0);
-    SetUpIconRow();
+    //ClearDisplayRow(0);
+    //SetUpIconRow();
     EPD_Init();
+    ClearDisplayRow(0);
+    SetUpIconRow();
     EPD_Update(ROW1_START, ROW1_END);
     SetUpDisplayString(ARROW_YES, top_menu_run_str, 4);
     EPD_Update(ROW2_START, ROW2_END);
@@ -197,22 +199,22 @@ void main(void) {
                 switch(menu_row_pointer){
                     
                     case RUN_OPT:
-                        disp_menu_level = SUB_LEVEL1;
+                        //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemRun();
                         break;
                         
                     case PROG_OPT:
-                        disp_menu_level = SUB_LEVEL1;
+                        //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemProgram();
                         break; 
                         
                     case CLR_OPT:
-                        disp_menu_level = SUB_LEVEL1;
+                        //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemClear();
                         break;  
                         
                     case INFO_OPT:
-                        disp_menu_level = SUB_LEVEL1;
+                        //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemInfo();
                         break;    
                 }

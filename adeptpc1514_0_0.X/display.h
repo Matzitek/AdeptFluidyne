@@ -72,8 +72,6 @@ extern unsigned char icon_row_list[16];
 extern unsigned char date_time_list[10];
 extern char menu_row_pointer;
 extern char disp_menu_level;
-//extern unsigned char display_line_even[25];
-//extern unsigned char display_line_odd[25];
 extern const unsigned char epd_data[8];
 extern unsigned char display_row[14][50];
 extern const unsigned char *icons[9];
@@ -85,9 +83,30 @@ extern const unsigned char *top_menu_info_str[5];
 extern const unsigned char *prog_config_str[14];
 extern const unsigned char *prog_calibrate_str[10];
 extern const unsigned char *prog_exit_str[5];
+extern const unsigned char *cal_excite_str[16];
+extern const unsigned char *cal_convertk_str[12];
+extern const unsigned char *cal_tubek1_str[8];
+extern const unsigned char *cal_tubek2_str[8];
+extern const unsigned char *cal_tubek2_vel_str[17];
+extern const unsigned char *cal_factor_str[7];
+extern const unsigned char *cal_zero_str[9];
+extern const unsigned char *clr_total_str[12];
+extern const unsigned char *clr_hours_str[12];
+
+extern const unsigned char *password_str[9];
+extern unsigned char *pw_str[5];
 
 /* Display character patterns */
-
+extern const unsigned char char_zero[14][3];
+extern const unsigned char char_one[14][3];
+extern const unsigned char char_two[14][3];
+extern const unsigned char char_three[14][3];
+extern const unsigned char char_four[14][3];
+extern const unsigned char char_five[14][3];
+extern const unsigned char char_six[14][3];
+extern const unsigned char char_seven[14][3];
+extern const unsigned char char_eight[14][3];
+extern const unsigned char char_nine[14][3];
 
 
 /* Function prototypes */
@@ -111,7 +130,7 @@ void SetDisplayLine(unsigned char line);
 //void SetUpDisplayRow(char row_number, char menu_level); //, unsigned char *digit_ptr);
 void SetUpDisplayString(char ARROW, unsigned char *display_string[], char string_length);
 void SetUpIconRow(void);
-void ClearDisplay(char row);
+void ClearDisplayRow(char row);
 
 
 #ifdef	__cplusplus
