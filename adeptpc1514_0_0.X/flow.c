@@ -29,6 +29,9 @@ float ph1_mean, ph2_mean;
 float flow_k, flow_k_1;
 float K;
 float Pk_1;
+float flow_rate;
+float total;
+float velocity;
 
 /* FUNCTIONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 void EmptyPipeCheck(void){
@@ -131,6 +134,8 @@ void MeasureFlow(void){
     delta = abs(ph1_mean - ph2_mean);
     flow_k = KalmanFilter(delta, flow_k_1);   // new measurement estimate
     flow_k_1 = flow_k;
+    
+    /* Apply calibration constants to flow_k to get actual flow */
 }
 
 /* ADC_Read() +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */

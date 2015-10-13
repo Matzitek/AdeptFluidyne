@@ -68,8 +68,8 @@
 #pragma config DSWDTEN = ON             // Deep Sleep Watchdog Timer Enable bit (DSWDT enabled)
 
 #include "p24F32KA304.h"
-#include <stdio.h>
-#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 #include "main.h"
 //#include "math.h"
 #include "display.h"
@@ -79,25 +79,26 @@
 #include "menu.h"
 
 /* DECLARATIONS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-char outbuffer[MAXOUTBUF];
-char inbuffer[MAXINBUF];
-char UP_BUTTON_PRESSED;
-char SHIFT_BUTTON_PRESSED;
-char ENTER_BUTTON_PRESSED;
-char BUTTON_PRESS_OK;
+//char outbuffer[MAXOUTBUF];
+//char inbuffer[MAXINBUF];
+volatile char UP_BUTTON_PRESSED;
+volatile char SHIFT_BUTTON_PRESSED;
+volatile char ENTER_BUTTON_PRESSED;
+volatile char BUTTON_PRESS_OK;
 char UPDATE_TOP_LEVEL_MENU;
 char n_samples;
 int data, t2_pr_value, i, j; //, k;
 char k, f_excite_index;
 int pga_gain;
-//long addr;
+int total_res;
+int flow_res;
 
 // ADC conversion results
 volatile unsigned int flow_raw;
 
 /* Default values */
 char menu_row_pointer; 
-char disp_menu_level;
+//char disp_menu_level;
 
 
 
@@ -133,8 +134,13 @@ void main(void) {
     
     f_excite_index = 4; //for testing - changing excitation frequency
     TIMERS_Config(t2_pr_value);
-    flow_k_1 = 0;   // for first time entry into Kalman filter
+    
+    /* Initialize variable with default values */
+    flow_k_1 = 0;           // for first time entry into Kalman filter
     Pk_1 = 1; 
+    data = ReadEEPROM(16);  // totalizer display resolution from EEPROM
+    total_res = data;
+    flow_res = 0;           // no decimal places
     
     /* Power-up defaults */
     pga_gain = 1;   // this must be read from EEPROM
@@ -173,6 +179,11 @@ void main(void) {
     SetUpDisplayString(ARROW_NO, top_menu_info_str, 5);
     EPD_Update(ROW5_START, ROW5_END);
     EPD_PowerOff();
+    
+    // initialize for testing
+    flow_rate = 0;
+    total = 0;
+    velocity = 0;
   
 
     /* Main program loop */
@@ -201,21 +212,25 @@ void main(void) {
                     case RUN_OPT:
                         //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemRun();
+                        menu_row_pointer = RUN_OPT;
                         break;
                         
                     case PROG_OPT:
                         //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemProgram();
+                        menu_row_pointer = RUN_OPT;
                         break; 
                         
                     case CLR_OPT:
                         //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemClear();
+                        menu_row_pointer = RUN_OPT;
                         break;  
                         
                     case INFO_OPT:
                         //disp_menu_level = SUB_LEVEL1;
                         TopMenuItemInfo();
+                        menu_row_pointer = RUN_OPT;
                         break;    
                 }
                 
@@ -435,7 +450,7 @@ void MCU_init(void){
 /* INTERRUPTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
 /* Input change notification interrupt handler */
-void _ISR _CNInterrupt (void){
+void __attribute__((__interrupt__, __no_auto_psv__)) _CNInterrupt (void){
 
     if(IFS1bits.CNIF){
         IFS1bits.CNIF = 0; 
@@ -499,7 +514,7 @@ void _ISR _CNInterrupt (void){
 
 /* INT2 interrupt handler.
  * SHIFT_BUTTON has dual role: Shift and Down. */
-void _ISR _INT2Interrupt (void){
+void __attribute__((__interrupt__, __no_auto_psv__)) _INT2Interrupt (void){
     
     if(IFS1bits.INT2IF ){
         IFS1bits.INT2IF = 0; 
@@ -534,7 +549,8 @@ void _ISR _INT2Interrupt (void){
 }
 
 /* Address error trap interrupt handler */
-void _ISR _AddressError (void){
+//void _ISR _AddressError (void){
+void __attribute__((__interrupt__, __no_auto_psv__)) _AddressError(void){
     
     if(INTCON1bits.ADDRERR){
         INTCON1bits.ADDRERR = 0;

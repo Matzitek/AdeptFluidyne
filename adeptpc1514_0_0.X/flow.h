@@ -19,9 +19,14 @@ extern float ph1_mean, ph2_mean;
 extern float flow_k, flow_k_1;
 extern float K; // Kalman filter gain
 extern float Pk_1;
+extern float flow_rate;
+extern float total;
+extern float velocity;
 extern int pga_gain;
+extern int total_res;   // totalizer display resolution
+extern int flow_res;   // flow rate and velocity display resolution
 
-    /* ADC input channels */   
+/* ADC input channels */   
 #define FLOW                    0x0001   // AN1
 #define EP_SENSE                0x0002   // AN2
 #define BATT_MON                0x0003   // AN3    
@@ -29,6 +34,9 @@ extern int pga_gain;
 #define FLOW_ADC_RESULT         ADC1BUF1
 #define EP_SENSE_ADC_RESULT     ADC1BUF2
 #define EMPTY_PIPE_THRESHOLD    250    // find correct value
+
+/* Flow velocity and rate display resolutions (decimal places)*/
+
 
 // covariances for Kalman filter
 #define Q   1

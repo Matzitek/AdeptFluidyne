@@ -53,24 +53,43 @@ extern "C" {
 #define INFO_OPT        4    
     
 /* Flag declarations */    
-extern char UP_BUTTON_PRESSED;
-extern char SHIFT_BUTTON_PRESSED;
-extern char ENTER_BUTTON_PRESSED;
-extern char BUTTON_PRESS_OK;
+extern volatile char UP_BUTTON_PRESSED;
+extern volatile char SHIFT_BUTTON_PRESSED;
+extern volatile char ENTER_BUTTON_PRESSED;
+extern volatile char BUTTON_PRESS_OK;
     
 /* Variable declarations */
 extern char top_menu_item;
 extern char prog_menu_item;
+
+/* Display character patterns */
+extern const unsigned char char_zero[14][3];
+extern const unsigned char char_one[14][3];
+extern const unsigned char char_two[14][3];
+extern const unsigned char char_three[14][3];
+extern const unsigned char char_four[14][3];
+extern const unsigned char char_five[14][3];
+extern const unsigned char char_six[14][3];
+extern const unsigned char char_seven[14][3];
+extern const unsigned char char_eight[14][3];
+extern const unsigned char char_nine[14][3];
+extern const unsigned char char_space[14][3];
+extern const unsigned char char_plus[14][3];
+extern const unsigned char char_minus[14][3];
 
 /* Function prototypes */
 void TopMenuItemRun(void);
 void TopMenuItemProgram(void);
 void TopMenuItemClear(void);
 void TopMenuItemInfo(void);
+void InputPasswordClear(void);
 void PasswordEnter(void);
 void CalibrateMain(void);
 void CalibrateFactor(void);
 void CalibrateZero(void);
+void CheckUpShiftButtons(char max_items);
+void ClearTotal(void);
+void ClearHours(void);
 
 #ifdef	__cplusplus
 }

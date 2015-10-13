@@ -29,9 +29,10 @@
  * Word 5 (offset = 8): 1 (totaliser unit = m^3)
  * Word 6 (offset = 10): 1 (low flow cut-off = 0.04 m/s)?
  * Word 7 (offset = 12): 1 (unidirectional flow)
- * Word 8 (offset = 14): 3 (F_excite = 12.5 Hz) */
+ * Word 8 (offset = 14): 3 (F_excite = 12.5 Hz)
+ * Word 9 (offset = 16): 0 (Totalizer resolution = no decimal point) */
 
-int __attribute__ ((space(eedata))) eeData[] = {100, 1, 1, 1, 1, 1, 1, 4};
+int __attribute__ ((space(eedata))) eeData[] = {100, 1, 1, 1, 1, 1, 1, 4, 0};
 
 /* FUNCTIONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 int ReadEEPROM(unsigned int ee_addr_offset){

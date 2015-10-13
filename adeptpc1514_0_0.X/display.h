@@ -54,24 +54,30 @@ extern "C" {
 #define ARROW_YES       1
 #define ARROW_NO        0
     
+/* Sign to preceed numeric display */    
+#define NO_SIGN         0   // space
+#define PLUS            1   // +
+#define MINUS           2   // -
+    
     
 /* Icon bits */
 /*extern const unsigned char odd_dots[2][25]; */
     
-extern const unsigned char char_zero[14][3];
+//extern const unsigned char char_zero[14][3];
 
-extern const unsigned char char_one[14][3];
+//extern const unsigned char char_one[14][3];
 
-extern const unsigned char char_two[14][3];
+//extern const unsigned char char_two[14][3];
 
 extern unsigned char stage, scan, temp; //, i;
 extern unsigned char scan_data[24];
-extern unsigned char display_line_old[75];
+//extern unsigned char display_line_old[75];
 extern unsigned char display_line_new[75];
 extern unsigned char icon_row_list[16];
 extern unsigned char date_time_list[10];
 extern char menu_row_pointer;
-extern char disp_menu_level;
+//extern char disp_menu_level;
+
 extern const unsigned char epd_data[8];
 extern unsigned char display_row[14][50];
 extern const unsigned char *icons[9];
@@ -92,9 +98,18 @@ extern const unsigned char *cal_factor_str[7];
 extern const unsigned char *cal_zero_str[9];
 extern const unsigned char *clr_total_str[12];
 extern const unsigned char *clr_hours_str[12];
+extern const unsigned char *yes_str[4];
+extern const unsigned char *no_str[3];
+extern const unsigned char *prod_name_str[13];
+extern const unsigned char *fw_version_str[12];
+extern const unsigned char *run_hr_min_str[10];
+extern const unsigned char *on_hr_min_str[9];
+extern const unsigned char *intrupts_str[14];
 
 extern const unsigned char *password_str[9];
-extern unsigned char *pw_str[5];
+extern unsigned char *pw_display_str[5];
+extern unsigned char variable_str[11];      // 10 plus terminating null
+extern unsigned char *num_display_str[10];   // set up with character patterns 
 
 /* Display character patterns */
 extern const unsigned char char_zero[14][3];
@@ -131,6 +146,7 @@ void SetDisplayLine(unsigned char line);
 void SetUpDisplayString(char ARROW, unsigned char *display_string[], char string_length);
 void SetUpIconRow(void);
 void ClearDisplayRow(char row);
+SetupNumericDisplay(char sign, int dec_places, float variable);
 
 
 #ifdef	__cplusplus

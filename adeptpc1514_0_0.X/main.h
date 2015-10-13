@@ -32,8 +32,8 @@ extern "C" {
 #define SHIFT_BUTTON    PORTAbits.RA6   // switch 2
 #define ENTER_BUTTON    PORTBbits.RB12  // switch 3
 
-#define MAXOUTBUF       128
-#define MAXINBUF        128
+#define MAXOUTBUF       20
+#define MAXINBUF        20
 
 
     
