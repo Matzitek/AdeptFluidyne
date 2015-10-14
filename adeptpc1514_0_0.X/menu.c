@@ -436,6 +436,8 @@ void TopMenuItemClear(void){
     }     
 }
 
+
+#ifndef LEAVE_OUT_CODE 
 /* TopMenuItemInfo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* This function handles the Info menu item on the top level menu.            */
 
@@ -534,7 +536,7 @@ void TopMenuItemInfo(void){
     }    
     
 }
-
+#endif
 
 /* InputPasswordClear ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 /* This function clears the previous password entry so that it does not show the

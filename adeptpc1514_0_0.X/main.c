@@ -229,7 +229,7 @@ void main(void) {
                         
                     case INFO_OPT:
                         //disp_menu_level = SUB_LEVEL1;
-                        TopMenuItemInfo();
+                        //TopMenuItemInfo();
                         menu_row_pointer = RUN_OPT;
                         break;    
                 }

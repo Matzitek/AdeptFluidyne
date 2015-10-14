@@ -52,6 +52,8 @@ extern "C" {
 #define CLR_OPT         3
 #define INFO_OPT        4    
     
+//#define LEAVE_OUT_CODE   // use this to leave out large sections of code        
+    
 /* Flag declarations */    
 extern volatile char UP_BUTTON_PRESSED;
 extern volatile char SHIFT_BUTTON_PRESSED;

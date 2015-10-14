@@ -544,6 +544,7 @@ const unsigned char *yes_str[4] = {char_space, char_Y, char_e, char_s};
 
 const unsigned char *no_str[3] = {char_space, char_N, char_o};
 
+//#ifndef LEAVE_OUT
 const unsigned char *prod_name_str[13] = {char_space, char_P, char_r, char_o, char_d,
 char_u, char_c, char_t, char_space, char_N, char_a, char_m, char_e};
 
@@ -558,6 +559,8 @@ char_space, char_h, char_colon_extra, char_m, char_i, char_n};
 
 const unsigned char *intrupts_str[14] = {char_space, char_I, char_n, char_t, 
 char_e, char_r, char_r, char_u, char_p, char_t, char_i, char_o, char_n, char_s};
+
+//#endif
 
 unsigned char *pw_display_str[5] = {char_space, char_zero, char_zero, char_zero, char_zero};
 

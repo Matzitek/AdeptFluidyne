@@ -58,7 +58,8 @@ extern "C" {
 #define NO_SIGN         0   // space
 #define PLUS            1   // +
 #define MINUS           2   // -
-    
+
+//#define LEAVE_OUT    
     
 /* Icon bits */
 /*extern const unsigned char odd_dots[2][25]; */
@@ -100,11 +101,14 @@ extern const unsigned char *clr_total_str[12];
 extern const unsigned char *clr_hours_str[12];
 extern const unsigned char *yes_str[4];
 extern const unsigned char *no_str[3];
+
+#ifndef LEAVE_OUT
 extern const unsigned char *prod_name_str[13];
 extern const unsigned char *fw_version_str[12];
 extern const unsigned char *run_hr_min_str[10];
 extern const unsigned char *on_hr_min_str[9];
 extern const unsigned char *intrupts_str[14];
+#endif
 
 extern const unsigned char *password_str[9];
 extern unsigned char *pw_display_str[5];
