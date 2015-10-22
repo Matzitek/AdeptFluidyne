@@ -54,11 +54,14 @@ extern "C" {
     
 //#define LEAVE_OUT_CODE   // use this to leave out large sections of code        
     
-/* Flag declarations */    
+/* Flag declarations */   
+/*    
 extern volatile char UP_BUTTON_PRESSED;
 extern volatile char SHIFT_BUTTON_PRESSED;
 extern volatile char ENTER_BUTTON_PRESSED;
-extern volatile char BUTTON_PRESS_OK;
+extern volatile char BUTTON_PRESS_OK; */
+    
+extern struct flag_bits flags; 
     
 /* Variable declarations */
 extern char top_menu_item;

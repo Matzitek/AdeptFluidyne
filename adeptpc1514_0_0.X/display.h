@@ -127,6 +127,8 @@ extern const unsigned char char_seven[14][3];
 extern const unsigned char char_eight[14][3];
 extern const unsigned char char_nine[14][3];
 
+extern struct flag_bits flags;
+
 
 /* Function prototypes */
 void EPD_Update(char start_line, char end_line);
@@ -150,7 +152,7 @@ void SetDisplayLine(unsigned char line);
 void SetUpDisplayString(char ARROW, unsigned char *display_string[], char string_length);
 void SetUpIconRow(void);
 void ClearDisplayRow(char row);
-SetupNumericDisplay(char sign, int dec_places, float variable);
+void SetupNumericDisplay(char sign, int dec_places, float variable);
 
 
 #ifdef	__cplusplus

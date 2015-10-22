@@ -24,7 +24,7 @@
 #include "timing.h"
 
 unsigned int adc_result;
-char PIPE_EMTPY_FLAG;
+
 float ph1_mean, ph2_mean;
 float flow_k, flow_k_1;
 float K;
@@ -52,10 +52,10 @@ void EmptyPipeCheck(void){
     adc_result = EP_SENSE_ADC_RESULT;
     
     if(adc_result > EMPTY_PIPE_THRESHOLD){
-        PIPE_EMTPY_FLAG = 0;
+        flags.PIPE_EMTPY_FLAG = FALSE;
     }
     else{
-        PIPE_EMTPY_FLAG = 1;
+        flags.PIPE_EMTPY_FLAG = TRUE;
     } 
 } 
 

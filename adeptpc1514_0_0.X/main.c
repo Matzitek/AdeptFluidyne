@@ -77,18 +77,27 @@
 #include "timing.h"
 #include "flow.h"
 #include "menu.h"
+#include "comms.h"
 
 /* DECLARATIONS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-//char outbuffer[MAXOUTBUF];
-//char inbuffer[MAXINBUF];
+
+//volatile char rx_index;
+//volatile char inbuff_count;
+struct flag_bits flags;
+
+/*
 volatile char UP_BUTTON_PRESSED;
 volatile char SHIFT_BUTTON_PRESSED;
 volatile char ENTER_BUTTON_PRESSED;
 volatile char BUTTON_PRESS_OK;
-char UPDATE_TOP_LEVEL_MENU;
+*/
+
+
+//char UPDATE_MENU;
+//char PIPE_EMTPY_FLAG;
 char n_samples;
 int data, t2_pr_value, i, j; //, k;
-char k, f_excite_index;
+//char k, f_excite_index;
 int pga_gain;
 int total_res;
 int flow_res;
@@ -98,8 +107,6 @@ volatile unsigned int flow_raw;
 
 /* Default values */
 char menu_row_pointer; 
-//char disp_menu_level;
-
 
 
 /* MAIN PROGRAM +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -132,8 +139,7 @@ void main(void) {
             break;
     }
     
-    f_excite_index = 4; //for testing - changing excitation frequency
-    TIMERS_Config(t2_pr_value);
+     TIMERS_Config(t2_pr_value);
     
     /* Initialize variable with default values */
     flow_k_1 = 0;           // for first time entry into Kalman filter
@@ -151,11 +157,11 @@ void main(void) {
     menu_row_pointer = RUN_OPT;
     //disp_menu_level = TOP_LEVEL;
     IFS3bits.RTCIF = 0;
-    SHIFT_BUTTON_PRESSED = 0;
-    UP_BUTTON_PRESSED = 0; 
-    ENTER_BUTTON_PRESSED = 0;
-    BUTTON_PRESS_OK = 0;
-    UPDATE_TOP_LEVEL_MENU = 0;
+    flags.SHIFT_BUTTON_PRESSED = FALSE;
+    flags.UP_BUTTON_PRESSED = FALSE; 
+    flags.ENTER_BUTTON_PRESSED = FALSE;
+    flags.BUTTON_PRESS_OK = FALSE;
+    flags.UPDATE_MENU = FALSE;
     
     // set up date and time with zero values
     date_time[0] = 0x0015;  // year
@@ -163,9 +169,6 @@ void main(void) {
     date_time[2] = 0x0000;  // week day/hours
     date_time[3] = 0x0000;  // minutes/seconds
     RTCC_Set();
-    //ClearDisplay(0);
-    //ClearDisplayRow(0);
-    //SetUpIconRow();
     EPD_Init();
     ClearDisplayRow(0);
     SetUpIconRow();
@@ -184,7 +187,20 @@ void main(void) {
     flow_rate = 0;
     total = 0;
     velocity = 0;
+    ClearInBuffer();
   
+    while(1){
+        while(flags.RX_END_FLAG == FALSE);
+        flags.RX_END_FLAG = FALSE;
+        Delay1ms(1000);
+        outbuff_count = sprintf(outbuffer, "OK\r\n");
+        //AppendCRLF();
+        UART_TransmitData();
+        ClearInBuffer();
+        Delay1ms(1000);
+        asm("NOP");
+        asm("NOP");
+    }
 
     /* Main program loop */
     for(;;){
@@ -199,13 +215,13 @@ void main(void) {
         }
         
         /* Check if key was pressed */
-        if(BUTTON_PRESS_OK){
+        if(flags.BUTTON_PRESS_OK){
             
-            BUTTON_PRESS_OK = 0;
+            flags.BUTTON_PRESS_OK = FALSE;
             
-            if(ENTER_BUTTON_PRESSED){
+            if(flags.ENTER_BUTTON_PRESSED){
                 /* Move to the first sub-level */
-                ENTER_BUTTON_PRESSED = 0;
+                flags.ENTER_BUTTON_PRESSED = FALSE;
                 
                 switch(menu_row_pointer){
                     
@@ -246,28 +262,28 @@ void main(void) {
                 EPD_PowerOff();
             }else{
                     
-                if(UP_BUTTON_PRESSED){
+                if(flags.UP_BUTTON_PRESSED){
                     menu_row_pointer--;
 
                     if(menu_row_pointer < RUN_OPT){
                         menu_row_pointer = INFO_OPT;
                     }
 
-                    UPDATE_TOP_LEVEL_MENU = 1;
+                    flags.UPDATE_MENU = TRUE;
                 }
 
-                if(SHIFT_BUTTON_PRESSED){
+                if(flags.SHIFT_BUTTON_PRESSED){
                     menu_row_pointer++;
 
                     if(menu_row_pointer > INFO_OPT){
                         menu_row_pointer = RUN_OPT;
                     }
 
-                    UPDATE_TOP_LEVEL_MENU = 1;
+                    flags.UPDATE_MENU = TRUE;
                 }  
 
-                if(UPDATE_TOP_LEVEL_MENU){
-                    UPDATE_TOP_LEVEL_MENU = 0;
+                if(flags.UPDATE_MENU){
+                    flags.UPDATE_MENU = FALSE;
                     EPD_Init();
                     
                     switch(menu_row_pointer){
@@ -326,14 +342,14 @@ void main(void) {
 
 /* FUNCTIONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
 
+
+
 /* System initialisation after power-up */
 void MCU_init(void){
 
     /* Configure the clock */
     OSCCONbits.COSC = 7;    // select FRCDIV
     CLKDIVbits.RCDIV = 0;   // divide 8 MHz FRC by 1: Fcy = 4 MHz
-    
-    
     
     /* Configure I/O pins */
     ANSAbits.ANSA1 = 1;     // RA1 is AN1 input (FLOW)
@@ -383,6 +399,8 @@ void MCU_init(void){
     TRISCbits.TRISC3 = 1;
     TRISCbits.TRISC4 = 0;
     TRISCbits.TRISC5 = 0;
+    TRISCbits.TRISC6 = 1;   // UART1 RX input
+    TRISCbits.TRISC7 = 0;   // UART1 TX output
     TRISCbits.TRISC8 = 0;   // RC8 (OC2) is PULSE_OUT
     PULSE_OUT = 0;
     TRISCbits.TRISC9 = 0;   // RC9 is nDISP_RESET
@@ -430,7 +448,14 @@ void MCU_init(void){
     SPI2CON2 = 0;
 
 
-    /* Configure UART */
+    /* Configure UART1 */
+    U1BRG = 51;             // 19200 baud
+    U1MODE = 0;
+    U1MODEbits.BRGH = 1;    // high baud rate
+    U1MODEbits.UARTEN = 1;  // enable UART
+    U1MODEbits.STSEL = 1;   // 2 stop bits
+    U1STAbits.UTXEN = 1;    // enable tranmission
+    flags.RX_END_FLAG = FALSE;
 
     /* Configure interrupts */
     CNPU1bits.CN9PUE = 1;   // enable pull-up on CN9
@@ -444,7 +469,7 @@ void MCU_init(void){
     INTCON2bits.INT2EP = 1; // falling edge interrupt on INT2 (SW2)
     IFS1bits.INT2IF = 0;
     IEC1bits.INT2IE = 1;    // enable INT2 interrupt
-    
+    IEC0bits.U1RXIE = 1;    // enable UART1 RX interrupt
 }
 
 /* INTERRUPTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
@@ -463,46 +488,46 @@ void __attribute__((__interrupt__, __no_auto_psv__)) _CNInterrupt (void){
         
         if(!UP_BUTTON){ // UP_BUTTON pressed
             
-            BUTTON_PRESS_OK = 0;
+            flags.BUTTON_PRESS_OK = FALSE;
             
-            while((!BUTTON_PRESS_OK) | IFS1bits.CNIF){ // do debounce checking
+            while((!flags.BUTTON_PRESS_OK) | IFS1bits.CNIF){ // do debounce checking
                 
                 while(!UP_BUTTON);  // wait for key to be released
 
-                BUTTON_PRESS_OK = 1;    // assume OK
+                flags.BUTTON_PRESS_OK = TRUE;    // assume OK
 
                 if(IFS1bits.CNIF){
                     IFS1bits.CNIF = 0;
-                    BUTTON_PRESS_OK = 0;    // still not OK
+                    flags.BUTTON_PRESS_OK = FALSE;    // still not OK
                 }
             }
             
             /* What to do when this button is pressed? */
-            UP_BUTTON_PRESSED = 1;
-            SHIFT_BUTTON_PRESSED = 0;
-            ENTER_BUTTON_PRESSED = 0;
+            flags.UP_BUTTON_PRESSED = TRUE;
+            flags.SHIFT_BUTTON_PRESSED = FALSE;
+            flags.ENTER_BUTTON_PRESSED = FALSE;
         }
         
-        if (!ENTER_BUTTON){  // ENTER_BUTTON pressed
+        if (!ENTER_BUTTON){  // ENTER button is being pressed
             
-            BUTTON_PRESS_OK = 0;
+            flags.BUTTON_PRESS_OK = FALSE;
             
-            while((!BUTTON_PRESS_OK) | IFS1bits.CNIF){ // do debounce checking
+            while((!flags.BUTTON_PRESS_OK) | IFS1bits.CNIF){ // do debounce checking
                 
                 while(!ENTER_BUTTON);  // wait for key to be released
 
-                BUTTON_PRESS_OK = 1;    // assume OK
+                flags.BUTTON_PRESS_OK = TRUE;    // assume OK
 
                 if(IFS1bits.CNIF){
                     IFS1bits.CNIF = 0;
-                    BUTTON_PRESS_OK = 0;    // still not OK
+                    flags.BUTTON_PRESS_OK = FALSE;    // still not OK
                 }
             }
             
             /* What to do when this button is pressed? */            
-            ENTER_BUTTON_PRESSED = 1;
-            UP_BUTTON_PRESSED = 0;
-            SHIFT_BUTTON_PRESSED = 0;
+            flags.ENTER_BUTTON_PRESSED = TRUE;
+            flags.UP_BUTTON_PRESSED = FALSE;
+            flags.SHIFT_BUTTON_PRESSED = FALSE;
         }
 
     }
@@ -520,32 +545,60 @@ void __attribute__((__interrupt__, __no_auto_psv__)) _INT2Interrupt (void){
         IFS1bits.INT2IF = 0; 
         IEC1bits.INT2IE = 0;  // temporary interrupt disable
         
-        if (!SHIFT_BUTTON){  // SHIFT_BUTTON pressed
+        if (!SHIFT_BUTTON){  // SHIFT button is being pressed
             
-            BUTTON_PRESS_OK = 0;
+            flags.BUTTON_PRESS_OK = FALSE;
             
-            while((!BUTTON_PRESS_OK) | IFS1bits.INT2IF){ // do debounce checking
+            while((!flags.BUTTON_PRESS_OK) | IFS1bits.INT2IF){ // do debounce checking
                 
                 while(!SHIFT_BUTTON);  // wait for key to be released
 
-                BUTTON_PRESS_OK = 1;    // assume OK
+                flags.BUTTON_PRESS_OK = TRUE;    // assume OK
 
                 if(IFS1bits.INT2IF){
                     IFS1bits.INT2IF = 0;
-                    BUTTON_PRESS_OK = 0;    // still not OK
+                    flags.BUTTON_PRESS_OK = FALSE;    // still not OK
                 }
             }
             
             /* What to do when this button is pressed? */
-            SHIFT_BUTTON_PRESSED = 1;
-            ENTER_BUTTON_PRESSED = 0;
-            UP_BUTTON_PRESSED = 0;
+            flags.SHIFT_BUTTON_PRESSED = TRUE;
+            flags.ENTER_BUTTON_PRESSED = FALSE;
+            flags.UP_BUTTON_PRESSED = FALSE;
 
         }
     } 
     
     IFS1bits.INT2IF = 0; 
     IEC1bits.INT2IE = 1;  // enable interrupt again
+}
+
+/* UART1 RX interrupt handler. */
+void __attribute__((__interrupt__, __no_auto_psv__)) _U1RXInterrupt (void){
+
+    if(IFS0bits.U1RXIF){
+        IFS0bits.U1RXIF = 0;
+
+        if(U1STAbits.URXDA){
+            inbuffer[rx_index] = U1RXREG;
+            
+            if((inbuffer[rx_index] == CR) | (inbuffer[rx_index] == LF)){
+                flags.RX_END_FLAG = TRUE;                        
+            }
+            
+            rx_index++;
+            inbuff_count++;
+            
+            if(rx_index > 4){
+                flags.RX_END_FLAG = TRUE;
+            }
+
+            if(rx_index >= MAXINBUF){
+                rx_index--;
+            }
+        }
+    }
+    return;
 }
 
 /* Address error trap interrupt handler */

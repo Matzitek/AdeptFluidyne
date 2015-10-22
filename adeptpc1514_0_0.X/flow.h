@@ -25,6 +25,7 @@ extern float velocity;
 extern int pga_gain;
 extern int total_res;   // totalizer display resolution
 extern int flow_res;   // flow rate and velocity display resolution
+extern struct flag_bits flags;
 
 /* ADC input channels */   
 #define FLOW                    0x0001   // AN1

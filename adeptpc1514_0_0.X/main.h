@@ -32,17 +32,23 @@ extern "C" {
 #define SHIFT_BUTTON    PORTAbits.RA6   // switch 2
 #define ENTER_BUTTON    PORTBbits.RB12  // switch 3
 
-#define MAXOUTBUF       20
+//#define MAXOUTBUF       20
 #define MAXINBUF        20
-
-
+ //   
+#define TRUE            1
+#define FALSE           0    
     
+struct flag_bits {
+    volatile unsigned int UP_BUTTON_PRESSED      : 1;
+    volatile unsigned int SHIFT_BUTTON_PRESSED   : 1;
+    volatile unsigned int ENTER_BUTTON_PRESSED   : 1;
+    volatile unsigned int BUTTON_PRESS_OK        : 1;
+    volatile unsigned int UPDATE_MENU            : 1; 
+    volatile unsigned int PIPE_EMTPY_FLAG        : 1;
+    volatile unsigned int EXIT_FLAG              : 1;
+    volatile unsigned int RX_END_FLAG            : 1;
+};    
    
-
-//#define TEST
-//#define CHECK_ID
-//#define TEST_SCAN
-//#define TEST_EPD    
 
 /* Menu constant strings */
 
@@ -53,6 +59,7 @@ void SetParameters(void);
 void GenerateDisplayPattern(void);
 void SendCommandToGSM(char command, char data);
 void GetUserInput(void);
+
 
 
 

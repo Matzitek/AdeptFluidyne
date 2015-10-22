@@ -115,7 +115,7 @@ void RTCC_WriteEnable(void){
     
 void RTCC_Set(void){
     
-    char i;
+    unsigned char i;
     
     RCFGCALbits.RTCPTR = 3;
     

@@ -23,6 +23,7 @@
 #include "menu.h"
 #include "display.h"
 #include "flow.h"
+#include "timing.h"
 #include <string.h>
 
 char top_menu_item;
@@ -47,7 +48,7 @@ char menu_item;
 
 void TopMenuItemRun(void){
     
-    char EXIT_FLAG, sign;
+    char sign;
     char dec_places;
     
     /* Clear all rows except icon row */
@@ -57,12 +58,12 @@ void TopMenuItemRun(void){
     ClearDisplayRow(4);
     ClearDisplayRow(5);
     EPD_PowerOff();
-    EXIT_FLAG = 0;
-    BUTTON_PRESS_OK = 0;
+    flags.EXIT_FLAG = FALSE;
+    flags.BUTTON_PRESS_OK = FALSE;
     sign = PLUS;    // for testing
     
    /* Stay in the Run display until ENTER key pressed */
-    while(!EXIT_FLAG){
+    while(!flags.EXIT_FLAG){
         
         /* Increment variables for testing */
         flow_rate = flow_rate + 5.5;
@@ -152,16 +153,16 @@ void TopMenuItemRun(void){
         
         Delay1ms(2000);
         
-        if(BUTTON_PRESS_OK){    // only way to get out is with key press!
-            BUTTON_PRESS_OK = 0;
+        if(flags.BUTTON_PRESS_OK){    // only way to get out is with key press!
+            flags.BUTTON_PRESS_OK = 0;
             
-            if(ENTER_BUTTON_PRESSED){
-                ENTER_BUTTON_PRESSED = 0; 
-                EXIT_FLAG = 1;
+            if(flags.ENTER_BUTTON_PRESSED){
+                flags.ENTER_BUTTON_PRESSED = 0; 
+                flags.EXIT_FLAG = TRUE;
             }else{
                 // wrong button pressed
-                SHIFT_BUTTON_PRESSED = 0;
-                UP_BUTTON_PRESSED = 0;
+                flags.SHIFT_BUTTON_PRESSED = 0;
+                flags.UP_BUTTON_PRESSED = 0;
             }
             
         } 
@@ -173,7 +174,7 @@ void TopMenuItemRun(void){
 
 void TopMenuItemProgram(void){
     
-    char EXIT_FLAG, pw_test;
+    char pw_test;
     int pw_test_result;
         
     /* Clear all rows except icon row */
@@ -184,17 +185,17 @@ void TopMenuItemProgram(void){
     ClearDisplayRow(5);
     EPD_PowerOff();
     menu_item = 1;
-    EXIT_FLAG = 0;
-    BUTTON_PRESS_OK = 0;
+    flags.EXIT_FLAG = FALSE;
+    flags.BUTTON_PRESS_OK = FALSE;
     
-    while(!EXIT_FLAG){
+    while(!flags.EXIT_FLAG){
         
         switch(menu_item){
             case 1:
                 /* Display "Configuration" in 3rd row */
                 EPD_Init();
                 ClearDisplayRow(3);
-                SetUpDisplayString(ARROW_NO, prog_config_str, 14);
+                SetUpDisplayString(ARROW_NO, &prog_config_str, 14);
                 EPD_Update(ROW3_START, ROW3_END);
                 EPD_Update(ROW3_START, ROW3_END);
                 EPD_PowerOff();
@@ -222,13 +223,13 @@ void TopMenuItemProgram(void){
         }
         
         /* Wait for key press */
-        while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+        while(!flags.BUTTON_PRESS_OK);    // only way to get out is with key press!
         
-        BUTTON_PRESS_OK = 0;
+        flags.BUTTON_PRESS_OK = 0;
         CheckUpShiftButtons(3);
         
-        if(ENTER_BUTTON_PRESSED){
-            ENTER_BUTTON_PRESSED = 0;
+        if(flags.ENTER_BUTTON_PRESSED){
+            flags.ENTER_BUTTON_PRESSED = 0;
             
             switch(menu_item){
                 case 1: // configuration
@@ -265,9 +266,9 @@ void TopMenuItemProgram(void){
                         
                         /* Check if ENTER button pressed in case user
                          * wants to get out without entering password. */
-                        if(ENTER_BUTTON_PRESSED){
-                            ENTER_BUTTON_PRESSED = 0;
-                            EXIT_FLAG = 1;
+                        if(flags.ENTER_BUTTON_PRESSED){
+                            flags.ENTER_BUTTON_PRESSED = FALSE;
+                            flags.EXIT_FLAG = TRUE;
                             break;
                         }
                     
@@ -289,7 +290,7 @@ void TopMenuItemProgram(void){
                     }    
                     
                 case 3: // exit
-                    EXIT_FLAG = 1;
+                    flags.EXIT_FLAG = TRUE;
             }
             
         }
@@ -303,7 +304,7 @@ void TopMenuItemProgram(void){
 void TopMenuItemClear(void){
     
     int pw_test_result;
-    char old_menu_item, EXIT_FLAG;
+    char old_menu_item;
     
     /* Clear all rows except icon row */
     EPD_Init();
@@ -323,10 +324,10 @@ void TopMenuItemClear(void){
         // password match
         
         menu_item = 1;
-        EXIT_FLAG = 0;
-        BUTTON_PRESS_OK = 0;
+        flags.EXIT_FLAG = FALSE;
+        flags.BUTTON_PRESS_OK = FALSE;
 
-        while(!EXIT_FLAG){
+        while(!flags.EXIT_FLAG){
 
             switch(menu_item){
                 case 1:
@@ -361,17 +362,17 @@ void TopMenuItemClear(void){
             }
             
             /* Wait for key press */
-            while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+            while(!flags.BUTTON_PRESS_OK);    // only way to get out is with key press!
 
-            BUTTON_PRESS_OK = 0;
+            flags.BUTTON_PRESS_OK = 0;
             CheckUpShiftButtons(3);
 
-            if(ENTER_BUTTON_PRESSED){
-                ENTER_BUTTON_PRESSED = 0;
+            if(flags.ENTER_BUTTON_PRESSED){
+                flags.ENTER_BUTTON_PRESSED = 0;
                 
                 if(menu_item == 3){
                     // exit
-                    EXIT_FLAG = 1;
+                    flags.EXIT_FLAG = TRUE;
                     break;  // out of while loop
                 }
                 
@@ -380,7 +381,7 @@ void TopMenuItemClear(void){
                 old_menu_item = menu_item;  // save for later
                 menu_item = 1;
                 
-                while(!EXIT_FLAG){
+                while(!flags.EXIT_FLAG){
                     EPD_Init();
                     ClearDisplayRow(4);
 
@@ -399,14 +400,14 @@ void TopMenuItemClear(void){
                     EPD_PowerOff();
                     
                     /* Wait for key press */
-                    while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+                    while(!flags.BUTTON_PRESS_OK);    // only way to get out is with key press!
 
-                    BUTTON_PRESS_OK = 0;
+                    flags.BUTTON_PRESS_OK = FALSE;
                     CheckUpShiftButtons(2);
                     
-                    if(ENTER_BUTTON_PRESSED){
-                        ENTER_BUTTON_PRESSED = 0;
-                        EXIT_FLAG = 1;
+                    if(flags.ENTER_BUTTON_PRESSED){
+                        flags.ENTER_BUTTON_PRESSED = FALSE;
+                        flags.EXIT_FLAG = TRUE;
 
                         switch(old_menu_item){
                             case 1:
@@ -424,7 +425,7 @@ void TopMenuItemClear(void){
                     }    
                 } 
                 
-                EXIT_FLAG = 0;  // to return to previous while loop
+                flags.EXIT_FLAG = FALSE;  // to return to previous while loop
             }
             
             EPD_Init();
@@ -443,7 +444,6 @@ void TopMenuItemClear(void){
 
 void TopMenuItemInfo(void){
     
-    char EXIT_FLAG;
         
     /* Clear all rows except icon row */
     EPD_Init();
@@ -453,10 +453,10 @@ void TopMenuItemInfo(void){
     ClearDisplayRow(5);
     EPD_PowerOff();
     menu_item = 1;
-    EXIT_FLAG = 0;
-    BUTTON_PRESS_OK = 0;
+    flags.EXIT_FLAG = FALSE;
+    flags.BUTTON_PRESS_OK = FALSE;
     
-    while(!EXIT_FLAG){
+    while(!flags.EXIT_FLAG){
         
         switch(menu_item){
             case 1:
@@ -524,14 +524,14 @@ void TopMenuItemInfo(void){
         }
         
         /* Wait for key press */
-        while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+        while(!flags.BUTTON_PRESS_OK);    // only way to get out is with key press!
         
-        BUTTON_PRESS_OK = 0;
+        flags.BUTTON_PRESS_OK = FALSE;
         CheckUpShiftButtons(6);
         
-        if(ENTER_BUTTON_PRESSED){
-            ENTER_BUTTON_PRESSED = 0;
-            EXIT_FLAG = 1;
+        if(flags.ENTER_BUTTON_PRESSED){
+            flags.ENTER_BUTTON_PRESSED = FALSE;
+            flags.EXIT_FLAG = TRUE;
         }
     }    
     
@@ -565,13 +565,13 @@ void InputPasswordClear(void){
 //char PasswordEnter(char *pw_string){
 void PasswordEnter(void){    
     
-    char digit_posn, ENTER_FLAG;
+    char digit_posn;
     char digit;
     
     digit_posn = 0;
     digit = 0;
-    ENTER_FLAG = 0;
-    BUTTON_PRESS_OK = 0;
+    flags.EXIT_FLAG = FALSE;
+    flags.BUTTON_PRESS_OK = FALSE;
     
     /* Display "Password" on row 3 and "0000" on row 4. */
     EPD_Init();
@@ -587,14 +587,14 @@ void PasswordEnter(void){
     EPD_PowerOff();
     
     /* Get the new password */
-    while(!ENTER_FLAG){
+    while(!flags.EXIT_FLAG){
          /* Wait for key press */
-        while(!BUTTON_PRESS_OK);    // only way to get out is with key press!
+        while(!flags.BUTTON_PRESS_OK);    // only way to get out is with key press!
         
-        BUTTON_PRESS_OK = 0;
+        flags.BUTTON_PRESS_OK = FALSE;
         
-        if(UP_BUTTON_PRESSED){  // increment the digit in the current position
-            UP_BUTTON_PRESSED = 0;
+        if(flags.UP_BUTTON_PRESSED){  // increment the digit in the current position
+            flags.UP_BUTTON_PRESSED = FALSE;
             
             digit++;
             
@@ -646,8 +646,8 @@ void PasswordEnter(void){
                         
         }
         
-        if(SHIFT_BUTTON_PRESSED){ // move right to next digit position
-            SHIFT_BUTTON_PRESSED = 0;
+        if(flags.SHIFT_BUTTON_PRESSED){ // move right to next digit position
+            flags.SHIFT_BUTTON_PRESSED = FALSE;
             digit_posn++;
             
             if(digit_posn > 3){
@@ -657,9 +657,9 @@ void PasswordEnter(void){
             digit = 0;
         }
         
-        if(ENTER_BUTTON_PRESSED){ 
-            ENTER_BUTTON_PRESSED = 0;
-            ENTER_FLAG = 1;
+        if(flags.ENTER_BUTTON_PRESSED){ 
+            flags.ENTER_BUTTON_PRESSED = FALSE;
+            flags.EXIT_FLAG = TRUE;
             EPD_Init();
             ClearDisplayRow(4);
             EPD_PowerOff();
@@ -685,8 +685,8 @@ void CalibrateZero(void){
 
 void CheckUpShiftButtons(char max_items){
     
-    if(UP_BUTTON_PRESSED){
-        UP_BUTTON_PRESSED = 0;
+    if(flags.UP_BUTTON_PRESSED){
+        flags.UP_BUTTON_PRESSED = FALSE;
         menu_item--;
 
         if(menu_item < 1){
@@ -694,8 +694,8 @@ void CheckUpShiftButtons(char max_items){
         }            
     }
 
-    if(SHIFT_BUTTON_PRESSED){
-        SHIFT_BUTTON_PRESSED = 0;
+    if(flags.SHIFT_BUTTON_PRESSED){
+        flags.SHIFT_BUTTON_PRESSED = FALSE;
         menu_item++;
 
         if(menu_item > max_items){
